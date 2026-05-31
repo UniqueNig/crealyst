@@ -92,6 +92,21 @@ export function Footer({ username, brand = "portfolio", socials }: Props) {
           )}
         </div>
       </div>
+
+      {/* Build credit — full-width bottom bar, centered on every breakpoint. */}
+      <div className="border-t border-[color:var(--border)]">
+        <p className="mx-auto max-w-6xl px-6 py-5 text-center text-sm text-[color:var(--muted)]">
+          Developed by{" "}
+          <a
+            href="https://emmanuelfaniyi.vercel.app/"
+            target="_blank"
+            rel="noreferrer noopener"
+            className="font-semibold text-gradient-brand hover:underline"
+          >
+            tech with dami
+          </a>
+        </p>
+      </div>
     </footer>
   );
 }

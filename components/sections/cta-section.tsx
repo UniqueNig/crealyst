@@ -28,7 +28,7 @@ export function CtaSection({ username }: { username: string }) {
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
               href={tenantHref(username, "/contact")}
-              className="group inline-flex items-center gap-2 rounded-full bg-brand-500 px-6 py-3 text-sm font-medium text-white transition-transform hover:-translate-y-0.5"
+              className="group inline-flex items-center gap-2 rounded-full bg-gradient-brand px-6 py-3 text-sm font-medium text-white shadow-lg transition-transform hover:-translate-y-0.5"
             >
               Start a project
               <ArrowRight

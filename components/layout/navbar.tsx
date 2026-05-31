@@ -54,13 +54,12 @@ export function Navbar({ username, brand = "portfolio" }: Props) {
     <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-3 sm:pt-4">
       <div
         className={cn(
-          "glass w-full max-w-3xl rounded-2xl transition-all duration-500",
-          scrolled || open
-            ? "rounded-2xl shadow-[0_12px_48px_-16px_rgba(15,23,42,0.35)]"
-            : "rounded-full"
+          "glass mx-auto w-full max-w-6xl rounded-2xl transition-shadow duration-500",
+          (scrolled || open) &&
+            "shadow-[0_12px_48px_-16px_rgba(15,23,42,0.35)]"
         )}
       >
-        <div className="flex h-14 items-center justify-between gap-2 pl-5 pr-2.5">
+        <div className="flex h-14 items-center justify-between gap-2 pl-6 pr-3">
           <Link
             href={homeHref}
             className="font-mono text-[15px] font-semibold tracking-tight"

@@ -50,6 +50,15 @@
   --glass-highlight: rgba(255, 255, 255, 0.85);
   --glass-shadow: 0 10px 40px -12px rgba(15, 23, 42, 0.22);
   --glass-blur: 20px;
+
+  /* Brand gradient. By default derived from the active brand scale, so every
+     solid theme gets a tasteful gradient for free. Gradient presets override
+     this var with their own two-stop gradient (see lib/themes.ts). */
+  --brand-gradient: linear-gradient(
+    135deg,
+    var(--color-brand-400),
+    var(--color-brand-600)
+  );
 }
 
 .dark {
@@ -135,6 +144,19 @@ body {
   pointer-events: none;
 }
 
+/* Brand gradient helpers. `.text-gradient-brand` clips the gradient to text;
+   `.bg-gradient-brand` fills a surface. Both read the `--brand-gradient` var,
+   so they respond to the portfolio's chosen theme automatically. */
+.text-gradient-brand {
+  background-image: var(--brand-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.bg-gradient-brand {
+  background-image: var(--brand-gradient);
+}
+
 /* Lift on hover for interactive glass cards. */
 .glass-hover {
   transition:
@@ -165,23 +187,25 @@ body {
   height: 45rem;
   border-radius: 9999px;
   filter: blur(120px);
-  opacity: 0.5;
+  /* Follows the active theme: brand for solid presets, the gradient for
+     gradient presets — so the backdrop always matches the chosen accent. */
+  background: var(--brand-gradient);
 }
 .ambient-mesh::before {
   top: -18rem;
   left: -10rem;
-  background: radial-gradient(circle, rgb(45 91 255 / 0.35), transparent 70%);
+  opacity: 0.22;
 }
 .ambient-mesh::after {
   top: -10rem;
   right: -12rem;
-  background: radial-gradient(circle, rgb(45 91 255 / 0.18), transparent 70%);
+  opacity: 0.14;
 }
 .dark .ambient-mesh::before {
-  opacity: 0.35;
+  opacity: 0.3;
 }
 .dark .ambient-mesh::after {
-  opacity: 0.25;
+  opacity: 0.2;
 }
 
 @media (prefers-reduced-motion: reduce) {

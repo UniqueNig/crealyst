@@ -64,12 +64,6 @@ export default async function LoginPage({
             >
               Forgot password?
             </Link>
-            <p>
-              No account yet?{" "}
-              <Link href="/signup" className="text-brand-500 hover:underline">
-                Sign up free
-              </Link>
-            </p>
           </div>
         </div>
       </main>

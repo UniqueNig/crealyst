@@ -37,7 +37,7 @@ export function Hero({ profile, username }: Props) {
             <h1 className="text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl">
               {name.split(" ")[0]}
               <br />
-              <span className="text-brand-500">{name.split(" ").slice(1).join(" ")}</span>
+              <span className="text-gradient-brand">{name.split(" ").slice(1).join(" ")}</span>
             </h1>
           </Reveal>
 

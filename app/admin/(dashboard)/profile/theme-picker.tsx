@@ -4,7 +4,12 @@ import { useActionState, useState, useTransition } from "react";
 import { Check, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { THEMES, type ThemeKey, type ThemePreset } from "@/lib/themes";
+import {
+  THEMES,
+  themeGradientCss,
+  type ThemeKey,
+  type ThemePreset,
+} from "@/lib/themes";
 import { updateAccentAction, type ThemeState } from "@/lib/actions/theme";
 import { useToast } from "@/components/admin/ui/toast";
 
@@ -100,6 +105,11 @@ function ThemeSwatch({
   disabled: boolean;
   onClick: () => void;
 }) {
+  const gradient = themeGradientCss(theme);
+  const fill: React.CSSProperties = gradient
+    ? { backgroundImage: gradient }
+    : { backgroundColor: theme.scale[500] };
+
   return (
     <button
       type="button"
@@ -115,11 +125,8 @@ function ThemeSwatch({
       }
       style={
         selected
-          ? ({
-              backgroundColor: theme.scale[500],
-              "--tw-ring-color": theme.scale[500],
-            } as React.CSSProperties)
-          : { backgroundColor: theme.scale[500] }
+          ? ({ ...fill, "--tw-ring-color": theme.scale[500] } as React.CSSProperties)
+          : fill
       }
     >
       {selected && <Check size={16} className="text-white" strokeWidth={3} />}

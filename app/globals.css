@@ -4,7 +4,9 @@
 
 @theme {
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Urbanist everywhere — the `font-mono` utility (wordmark, eyebrow labels,
+     dates) now resolves to Urbanist too, not a monospace face. */
+  --font-mono: var(--font-geist-sans);
 
   --color-brand-50: #ebf0ff;
   --color-brand-100: #d6e0ff;

@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "PowerShell($src = \"C:\\\\Users\\\\user\\\\OneDrive\\\\Desktop\\\\Emmanuel Faniyi\\\\emmanuelfaniyi\")",
+      "PowerShell($dst = \"C:\\\\Users\\\\user\\\\OneDrive\\\\Desktop\\\\Crealyst\")",
+      "Bash(ls app/welcome)",
+      "Bash(find app/welcome -type f)",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/__TRACKED_VAR__)",
+      "Bash(cd \"c:/Users/user/OneDrive/Desktop/crealyst\")",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' --max-time 30 http://localhost:3000/__TRACKED_VAR__)",
+      "Bash(echo '/__TRACKED_VAR__ -> __TRACKED_VAR__')",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" --max-time 120 \"http://localhost:3000/\")",
+      "Bash(tail -8 \"C:\\\\Users\\\\user\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-user-OneDrive-Desktop-crealyst\\\\9683c2cd-3e0e-4722-8519-c50c2c7f203c\\\\tasks\\\\bddpfn0qb.output\")",
+      "Bash(echo \"--- tsc exit: $? ---\")"
+    ]
+  }
+}

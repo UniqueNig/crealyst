@@ -1,0 +1,263 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator pothos {
+  provider     = "prisma-pothos-types"
+  clientOutput = "@prisma/client"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Identity ─────────────────────────────────────────────────────────────
+
+enum UserRole {
+  USER
+  OWNER
+}
+
+model User {
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  email            String    @unique
+  passwordHash     String
+  username         String    @unique
+  emailVerified           Boolean   @default(false)
+  role                    UserRole  @default(USER)
+  resetToken              String?
+  resetTokenExpiry        DateTime?
+  verificationToken       String?
+  verificationTokenExpiry DateTime?
+  // Moderation flags. Both nullable timestamps so the *moment* they happened
+  // is captured. `suspendedAt` is reversible (owner can unsuspend);
+  // `deletedAt` is the soft-delete flag (also reversible until purged).
+  suspendedAt             DateTime?
+  suspensionReason        String?
+  deletedAt               DateTime?
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+
+  @@index([resetToken])
+  @@index([verificationToken])
+  profile        Profile?
+  skills         Skill[]
+  services       Service[]
+  projects       Project[]
+  experiences    Experience[]
+  education      Education[]
+  certifications Certification[]
+  messages       ContactMessage[]
+  events         AccountEvent[]
+  pageViews      PageView[]
+}
+
+/// Anonymous portfolio analytics. One row per page load on /u/<username>/...
+/// `visitorId` is a SHA256 hash of (IP + user-agent + daily salt) — gives us
+/// a unique-visitor metric WITHOUT storing raw IPs and rotates daily so it
+/// can't be used for long-term tracking.
+model PageView {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  path      String
+  projectId String?  @db.ObjectId
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  visitorId String?
+  referrer  String?
+  country   String?
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([projectId])
+}
+
+model AccountEvent {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind      String
+  ip        String?
+  userAgent String?
+  metadata  String?
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
+
+// ─── Tenant data ──────────────────────────────────────────────────────────
+// Every model has a nullable `userId` for the migration window.
+// After backfill, the migration tightens to non-null and admin code asserts.
+
+model Profile {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String?  @unique @db.ObjectId
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name      String
+  title     String
+  tagline   String
+  bio       String
+  email     String
+  location  String?
+  avatarUrl String?
+  resumeUrl String?
+  // Theme preset key (e.g. "indigo", "emerald"). Null = default brand.
+  // See lib/themes.ts for the canonical list.
+  accent    String?
+  github    String?
+  linkedin  String?
+  twitter   String?
+  instagram String?
+  dribbble  String?
+  updatedAt DateTime @updatedAt
+}
+
+enum SkillCategory {
+  LANGUAGE
+  FRAMEWORK
+  TOOL
+  DATABASE
+  DESIGN
+  MARKETING
+  ANALYTICS
+  PRODUCTIVITY
+  OTHER
+}
+
+model Skill {
+  id        String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String?       @db.ObjectId
+  user      User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name      String
+  category  SkillCategory
+  iconUrl   String?
+  order     Int           @default(0)
+  createdAt DateTime      @default(now())
+
+  @@index([userId])
+}
+
+model Service {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String?  @db.ObjectId
+  user        User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  slug        String
+  title       String
+  description String
+  icon        String?
+  features    String[]
+  order       Int      @default(0)
+  featured    Boolean  @default(true)
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, slug])
+  @@index([userId])
+}
+
+model Project {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String?  @db.ObjectId
+  user        User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  slug        String
+  title       String
+  summary     String
+  description String
+  role        String
+  year        Int
+  liveUrl     String?
+  repoUrl     String?
+  coverImage  String
+  gallery     String[]
+  techStack   String[]
+  // High-level categorization (e.g. "Web", "Mobile", "AI", "Brand design").
+  // Distinct from techStack which lists implementation tech (React, Postgres).
+  // Free-form so the same field works for devs, designers, marketers, etc.
+  tags        String[]
+  order       Int      @default(0)
+  featured    Boolean  @default(false)
+  published   Boolean  @default(true)
+  metaTitle   String?
+  metaDesc    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  pageViews   PageView[]
+
+  @@unique([userId, slug])
+  @@index([userId])
+}
+
+model Experience {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String?   @db.ObjectId
+  user        User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  company     String
+  role        String
+  location    String?
+  startDate   DateTime
+  endDate     DateTime?
+  description String?
+  bullets     String[]
+  companyUrl  String?
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([userId])
+}
+
+model ContactMessage {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String?  @db.ObjectId
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name      String
+  email     String
+  phone     String?
+  subject   String?
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Education {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String?  @db.ObjectId
+  user        User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  school      String
+  degree      String
+  range       String
+  location    String?
+  description String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Certification {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String?  @db.ObjectId
+  user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name          String
+  issuer        String
+  year          String
+  credentialUrl String?
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([userId])
+}

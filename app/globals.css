@@ -1,0 +1,250 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  --color-brand-50: #ebf0ff;
+  --color-brand-100: #d6e0ff;
+  --color-brand-200: #adc1ff;
+  --color-brand-300: #84a2ff;
+  --color-brand-400: #5683ff;
+  --color-brand-500: #2d5bff;
+  --color-brand-600: #1f47e0;
+  --color-brand-700: #1736b0;
+  --color-brand-800: #0f2780;
+  --color-brand-900: #081854;
+
+  --color-ink-50: #f7f7f8;
+  --color-ink-100: #ededef;
+  --color-ink-200: #d5d5da;
+  --color-ink-300: #b1b1b9;
+  --color-ink-400: #87878f;
+  --color-ink-500: #6b6b73;
+  --color-ink-600: #54545b;
+  --color-ink-700: #404045;
+  --color-ink-800: #27272a;
+  --color-ink-900: #18181b;
+  --color-ink-950: #0a0a0b;
+
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --shadow-glow: 0 0 32px -8px rgb(45 91 255 / 0.4);
+}
+
+:root {
+  --background: #fbfbfd;
+  --foreground: #0a0a0b;
+  --surface: #f7f7f8;
+  --border: #ededef;
+  --muted: #6b6b73;
+
+  /* Apple-style frosted glass. Translucent fill + blur + saturate, a bright
+     hairline border, and a soft layered shadow. See the `.glass*` utilities. */
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-bg-strong: rgba(255, 255, 255, 0.78);
+  --glass-border: rgba(15, 23, 42, 0.08);
+  --glass-highlight: rgba(255, 255, 255, 0.85);
+  --glass-shadow: 0 10px 40px -12px rgba(15, 23, 42, 0.22);
+  --glass-blur: 20px;
+}
+
+.dark {
+  --background: #0a0a0b;
+  --foreground: #f7f7f8;
+  --surface: #18181b;
+  --border: #27272a;
+  --muted: #87878f;
+
+  --glass-bg: rgba(28, 28, 32, 0.55);
+  --glass-bg-strong: rgba(32, 32, 37, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.09);
+  --glass-highlight: rgba(255, 255, 255, 0.14);
+  --glass-shadow: 0 12px 48px -12px rgba(0, 0, 0, 0.7);
+  --glass-blur: 22px;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-brand-500);
+  color: white;
+}
+
+/* ─── Apple-style glass ──────────────────────────────────────────────────
+   `.glass` is the base frosted surface. `.glass-strong` is less transparent
+   for cards that hold dense content. `.glass-panel` adds the rounded shape +
+   an inset top highlight that reads as a light catching the panel's edge. */
+.glass,
+.glass-strong {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.glass-strong {
+  background: var(--glass-bg-strong);
+}
+
+/* The inset highlight: a 1px bright line along the top edge, like macOS
+   window chrome. Pair with `position: relative; overflow: hidden`. */
+.glass-panel {
+  position: relative;
+  border-radius: 1.5rem;
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.glass-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--glass-highlight),
+    transparent
+  );
+  pointer-events: none;
+}
+
+/* Lift on hover for interactive glass cards. */
+.glass-hover {
+  transition:
+    transform 0.4s var(--ease-out-soft),
+    box-shadow 0.4s var(--ease-out-soft),
+    border-color 0.4s var(--ease-out-soft);
+}
+.glass-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px -16px rgb(45 91 255 / 0.28);
+  border-color: rgb(45 91 255 / 0.35);
+}
+
+/* Ambient mesh — soft, blurred brand-tinted blobs for section backdrops.
+   Sits behind content; purely decorative. */
+.ambient-mesh {
+  position: absolute;
+  inset: 0;
+  z-index: -10;
+  overflow: hidden;
+  pointer-events: none;
+}
+.ambient-mesh::before,
+.ambient-mesh::after {
+  content: "";
+  position: absolute;
+  width: 45rem;
+  height: 45rem;
+  border-radius: 9999px;
+  filter: blur(120px);
+  opacity: 0.5;
+}
+.ambient-mesh::before {
+  top: -18rem;
+  left: -10rem;
+  background: radial-gradient(circle, rgb(45 91 255 / 0.35), transparent 70%);
+}
+.ambient-mesh::after {
+  top: -10rem;
+  right: -12rem;
+  background: radial-gradient(circle, rgb(45 91 255 / 0.18), transparent 70%);
+}
+.dark .ambient-mesh::before {
+  opacity: 0.35;
+}
+.dark .ambient-mesh::after {
+  opacity: 0.25;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface) 0%,
+    var(--border) 50%,
+    var(--surface) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+/* react-international-phone theming — match our dark/light vars */
+.react-international-phone-input-container {
+  --react-international-phone-height: 42px;
+  --react-international-phone-background-color: var(--background);
+  --react-international-phone-text-color: var(--foreground);
+  --react-international-phone-font-size: 14px;
+  --react-international-phone-border-radius: 8px;
+  --react-international-phone-border-color: var(--border);
+  --react-international-phone-country-selector-background-color: var(--background);
+  --react-international-phone-country-selector-background-color-hover: var(--surface);
+  --react-international-phone-country-selector-arrow-color: var(--muted);
+  --react-international-phone-flag-width: 22px;
+  --react-international-phone-flag-height: 22px;
+  --react-international-phone-dropdown-item-background-color: var(--surface);
+  --react-international-phone-dropdown-item-text-color: var(--foreground);
+  --react-international-phone-dropdown-item-dropdown-arrow-color: var(--muted);
+  --react-international-phone-selected-dropdown-item-background-color: var(--brand-500, #2d5bff)/10;
+  --react-international-phone-selected-dropdown-item-text-color: var(--foreground);
+  --react-international-phone-dropdown-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  width: 100%;
+}
+
+.react-international-phone-input-container .react-international-phone-input {
+  width: 100%;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.react-international-phone-input-container .react-international-phone-input:focus {
+  border-color: var(--color-brand-500);
+  outline: none;
+}
+
+.react-international-phone-input-container .react-international-phone-country-selector-button {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.react-international-phone-input-container .react-international-phone-country-selector-button:focus {
+  outline: none;
+  border-color: var(--color-brand-500);
+}

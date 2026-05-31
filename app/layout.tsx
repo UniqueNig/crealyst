@@ -2,7 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { cookies } from "next/headers";
 import { Urbanist } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/theme-provider";
-import { getSiteName } from "@/lib/site";
+import { getSiteName, getSiteTheme } from "@/lib/site";
+import { themeCssVars } from "@/lib/themes";
 import "./globals.css";
 
 // Urbanist is the site's preferred typeface (geometric, friendly), used for
@@ -71,6 +72,13 @@ export default async function RootLayout({
   const resolved =
     stored === "light" || stored === "dark" ? stored : "dark";
 
+  // Apply the owner's chosen accent/gradient at the root so EVERY page — login,
+  // password reset, welcome, 404, admin, and the public portfolio — uses the
+  // same brand color. (The public /u/<name> subtree re-applies its own, which
+  // for this single-tenant deployment resolves to the same theme.)
+  const theme = await getSiteTheme();
+  const themeCss = themeCssVars(theme?.key);
+
   return (
     <html
       lang="en"
@@ -78,7 +86,11 @@ export default async function RootLayout({
       className={`${urbanist.variable} h-full antialiased ${resolved}`}
       style={{ colorScheme: resolved }}
     >
-      <body className="min-h-full bg-background text-foreground">
+      <body
+        data-portfolio-theme={theme?.key ?? "default"}
+        className="min-h-full bg-background text-foreground"
+      >
+        {themeCss && <style dangerouslySetInnerHTML={{ __html: themeCss }} />}
         <ThemeProvider initialTheme={resolved}>{children}</ThemeProvider>
       </body>
     </html>

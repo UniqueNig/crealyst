@@ -1,7 +1,8 @@
 import { ImageResponse } from "next/og";
-import { getSiteName } from "@/lib/site";
+import { getSiteName, getSiteTheme } from "@/lib/site";
+import { themeGradientCss } from "@/lib/themes";
 
-const ACCENT = "#2d5bff";
+const DEFAULT_ACCENT = "#2d5bff";
 
 export const alt = "Portfolio";
 export const size = { width: 1200, height: 630 };
@@ -9,11 +10,13 @@ export const contentType = "image/png";
 
 /**
  * Root OG card — used on system routes (/, /login, /admin, etc.). Single-tenant
- * deployment, so it reflects the owner's name. Portfolio pages at /u/<username>
- * have their own richer OG card generated from the profile.
+ * deployment, so it reflects the owner's name and chosen accent. Portfolio
+ * pages at /u/<username> have their own richer OG card from the profile.
  */
 export default async function OpengraphImage() {
-  const name = await getSiteName();
+  const [name, theme] = await Promise.all([getSiteName(), getSiteTheme()]);
+  const accent = theme?.scale[500] ?? DEFAULT_ACCENT;
+  const gradient = themeGradientCss(theme) ?? accent;
   return new ImageResponse(
     (
       <div
@@ -43,7 +46,7 @@ export default async function OpengraphImage() {
               width: 14,
               height: 14,
               borderRadius: 999,
-              background: ACCENT,
+              background: gradient,
             }}
           />
           <span>Portfolio</span>
@@ -61,7 +64,7 @@ export default async function OpengraphImage() {
           >
             {name}
           </div>
-          <div style={{ fontSize: 32, color: ACCENT, maxWidth: 900 }}>
+          <div style={{ fontSize: 32, color: accent, maxWidth: 900 }}>
             Selected work, services, and contact.
           </div>
         </div>

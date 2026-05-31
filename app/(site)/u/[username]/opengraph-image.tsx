@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { getUserByUsername } from "@/lib/data/user";
 import { getProfile } from "@/lib/data/profile";
-import { resolveTheme } from "@/lib/themes";
+import { resolveTheme, themeGradientCss } from "@/lib/themes";
 import { absoluteAvatarUrl } from "@/lib/og-helpers";
 
 // Default OG card colors. Overridden by the user's accent when set.
@@ -64,6 +64,7 @@ export default async function OpengraphImage({
     "Portfolio";
   const theme = resolveTheme(profile?.accent);
   const accent = theme?.scale[500] ?? DEFAULT_ACCENT;
+  const gradient = themeGradientCss(theme) ?? accent;
   const avatarUrl = absoluteAvatarUrl(profile?.avatarUrl);
 
   return new ImageResponse(
@@ -95,7 +96,7 @@ export default async function OpengraphImage({
               width: 14,
               height: 14,
               borderRadius: 999,
-              background: accent,
+              background: gradient,
             }}
           />
           /u/{username}
@@ -107,7 +108,7 @@ export default async function OpengraphImage({
               width: 140,
               height: 140,
               borderRadius: 999,
-              background: accent,
+              background: gradient,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",

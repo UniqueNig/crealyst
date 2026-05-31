@@ -1,6 +1,7 @@
 import { getUserByUsername } from "@/lib/data/user";
 import { getProfile } from "@/lib/data/profile";
 import { isTenantMode } from "@/lib/tenants";
+import { resolveTheme, type ThemePreset } from "@/lib/themes";
 
 const TENANT = process.env.NEXT_PUBLIC_TENANT_USERNAME?.trim();
 
@@ -38,4 +39,22 @@ export async function getSiteName(): Promise<string> {
 export async function getSiteInitial(): Promise<string> {
   const name = await getSiteName();
   return name.trim().charAt(0).toUpperCase() || "·";
+}
+
+/**
+ * The owner's chosen theme preset (or null for the default). Lets system-level
+ * surfaces — the root layout, OG images — apply the same accent/gradient the
+ * owner picked for their portfolio, so color is consistent everywhere.
+ */
+export async function getSiteTheme(): Promise<ThemePreset | null> {
+  if (isTenantMode() && TENANT) {
+    try {
+      const user = await getUserByUsername(TENANT);
+      const profile = user ? await getProfile(user.id) : null;
+      return resolveTheme(profile?.accent);
+    } catch {
+      return null;
+    }
+  }
+  return null;
 }

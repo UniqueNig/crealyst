@@ -12,6 +12,7 @@ import {
   verifySession,
 } from "@/lib/auth";
 import { sendEmail } from "@/lib/email/send";
+import { getSiteTheme } from "@/lib/site";
 import {
   passwordResetHtml,
   passwordResetText,
@@ -204,6 +205,7 @@ export async function requestPasswordResetAction(
       resetUrl,
       expiresInMinutes: RESET_TOKEN_EXPIRY_MINUTES,
       siteUrl,
+      accent: (await getSiteTheme())?.scale[500],
     };
 
     const result = await sendEmail({
@@ -295,6 +297,7 @@ async function issueVerificationToken(email: string): Promise<void> {
     verifyUrl,
     expiresInHours: VERIFY_TOKEN_EXPIRY_HOURS,
     siteUrl,
+    accent: (await getSiteTheme())?.scale[500],
   };
 
   const result = await sendEmail({

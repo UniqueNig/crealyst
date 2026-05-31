@@ -16,7 +16,12 @@ type Payload = {
   subject?: string;
   message: string;
   siteUrl: string;
+  /** Theme accent (hex). Falls back to the default brand blue. */
+  accent?: string;
 };
+
+const EMAIL_FONT =
+  "'Urbanist',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
 
 export function contactNotificationHtml({
   name,
@@ -25,7 +30,9 @@ export function contactNotificationHtml({
   subject,
   message,
   siteUrl,
+  accent,
 }: Payload): string {
+  const accentColor = accent ?? "${accentColor}";
   const adminUrl = `${siteUrl}/admin/messages`;
   const safeMessage = escape(message).replace(/\n/g, "<br/>");
   const safeName = escape(name);
@@ -42,11 +49,11 @@ export function contactNotificationHtml({
           <strong>${safePhone}</strong>
           ${
             waUrl
-              ? `&nbsp;·&nbsp;<a href="${waUrl}" style="color:#2d5bff;text-decoration:none;">WhatsApp</a>`
+              ? `&nbsp;·&nbsp;<a href="${waUrl}" style="color:${accentColor};text-decoration:none;">WhatsApp</a>`
               : ""
           }${
             callUrl
-              ? `&nbsp;·&nbsp;<a href="${callUrl}" style="color:#2d5bff;text-decoration:none;">Call</a>`
+              ? `&nbsp;·&nbsp;<a href="${callUrl}" style="color:${accentColor};text-decoration:none;">Call</a>`
               : ""
           }
         </td>
@@ -65,15 +72,16 @@ export function contactNotificationHtml({
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>New message from your portfolio</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&display=swap" />
   </head>
-  <body style="margin:0;padding:0;background:#0a0a0b;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#f7f7f8;">
+  <body style="margin:0;padding:0;background:#0a0a0b;font-family:${EMAIL_FONT};color:#f7f7f8;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#0a0a0b;padding:40px 20px;">
       <tr>
         <td align="center">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;background:#18181b;border:1px solid #27272a;border-radius:16px;overflow:hidden;">
             <tr>
               <td style="padding:32px 32px 24px;border-bottom:1px solid #27272a;">
-                <div style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#2d5bff;font-weight:600;">
+                <div style="font-family:${EMAIL_FONT};font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:${accentColor};font-weight:600;">
                   New message
                 </div>
                 <h1 style="margin:8px 0 0;font-size:24px;font-weight:600;letter-spacing:-0.01em;color:#f7f7f8;">
@@ -89,7 +97,7 @@ export function contactNotificationHtml({
                     <td style="padding:0 0 12px;width:80px;color:#87878f;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;">From</td>
                     <td style="padding:0 0 12px;color:#f7f7f8;font-size:14px;">
                       <strong style="font-weight:600;">${safeName}</strong>
-                      &nbsp;<a href="mailto:${safeEmail}" style="color:#2d5bff;text-decoration:none;">&lt;${safeEmail}&gt;</a>
+                      &nbsp;<a href="mailto:${safeEmail}" style="color:${accentColor};text-decoration:none;">&lt;${safeEmail}&gt;</a>
                     </td>
                   </tr>
                   ${phoneRow}
@@ -106,7 +114,7 @@ export function contactNotificationHtml({
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:24px;">
                   <tr>
                     <td>
-                      <a href="mailto:${safeEmail}?subject=Re:%20${encodeURIComponent(safeSubject)}" style="display:inline-block;padding:10px 18px;background:#2d5bff;color:#ffffff;border-radius:999px;text-decoration:none;font-size:13px;font-weight:500;">
+                      <a href="mailto:${safeEmail}?subject=Re:%20${encodeURIComponent(safeSubject)}" style="display:inline-block;padding:10px 18px;background:${accentColor};color:#ffffff;border-radius:999px;text-decoration:none;font-size:13px;font-weight:500;">
                         Reply to ${safeName.split(" ")[0]}
                       </a>${phoneCta}
                       &nbsp;

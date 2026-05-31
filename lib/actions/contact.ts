@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/email/send";
+import { getSiteTheme } from "@/lib/site";
 import {
   contactNotificationHtml,
   contactNotificationText,
@@ -128,6 +129,7 @@ export async function submitContact(
     subject: parsed.data.subject,
     message: parsed.data.message,
     siteUrl,
+    accent: (await getSiteTheme())?.scale[500],
   };
 
   // Prefer Profile.email (the public contact address shown on the portfolio),

@@ -9,7 +9,7 @@ import { PortfolioGrid } from "./portfolio-grid";
 export const metadata: Metadata = {
   title: "Explore portfolios",
   description:
-    "Browse public portfolios built with Folonest. Developers, designers, marketers, analysts, and more.",
+    "Browse public portfolios. Developers, designers, marketers, analysts, and more.",
 };
 
 export default async function ExplorePage() {
@@ -65,8 +65,7 @@ export default async function ExplorePage() {
               Explore <span className="text-brand-500">portfolios</span>
             </h1>
             <p className="mt-4 text-base text-[color:var(--muted)]">
-              Real people building real things with Folonest. Click in to see
-              their work.
+              Real people building real things. Click in to see their work.
             </p>
           </div>
 

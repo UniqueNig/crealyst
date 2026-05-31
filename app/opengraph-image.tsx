@@ -1,17 +1,19 @@
 import { ImageResponse } from "next/og";
+import { getSiteName } from "@/lib/site";
 
 const ACCENT = "#2d5bff";
 
-export const alt = "Folonest — Your portfolio finds its home";
+export const alt = "Portfolio";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 /**
- * Root OG card for the SaaS marketing surface — used on /, /login, /signup,
- * /explore, etc. Tenant portfolios at /u/<username> have their own OG card
- * generated from each user's profile.
+ * Root OG card — used on system routes (/, /login, /admin, etc.). Single-tenant
+ * deployment, so it reflects the owner's name. Portfolio pages at /u/<username>
+ * have their own richer OG card generated from the profile.
  */
-export default function OpengraphImage() {
+export default async function OpengraphImage() {
+  const name = await getSiteName();
   return new ImageResponse(
     (
       <div
@@ -44,49 +46,34 @@ export default function OpengraphImage() {
               background: ACCENT,
             }}
           />
-          <span style={{ fontFamily: "monospace" }}>folonest</span>
+          <span>Portfolio</span>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
           <div
             style={{
               display: "flex",
-              fontSize: 88,
+              fontSize: 96,
               lineHeight: 1.05,
-              fontWeight: 600,
+              fontWeight: 700,
               letterSpacing: -2,
             }}
           >
-            Your portfolio
+            {name}
           </div>
-          <div
-            style={{
-              display: "flex",
-              fontSize: 88,
-              lineHeight: 1.05,
-              fontWeight: 600,
-              letterSpacing: -2,
-              color: ACCENT,
-            }}
-          >
-            finds its home.
-          </div>
-          <div style={{ fontSize: 32, color: "#b1b1b9", maxWidth: 900 }}>
-            A beautiful, SEO-friendly portfolio with a built-in admin panel.
-            No code. No redeploys.
+          <div style={{ fontSize: 32, color: ACCENT, maxWidth: 900 }}>
+            Selected work, services, and contact.
           </div>
         </div>
 
         <div
           style={{
             display: "flex",
-            justifyContent: "space-between",
             fontSize: 24,
             color: "#87878f",
           }}
         >
-          <span>Projects · Services · Contact form</span>
-          <span>↗ Get started free</span>
+          <span>Projects · Services · Contact</span>
         </div>
       </div>
     ),

@@ -21,7 +21,7 @@ export function Hero({ profile, username }: Props) {
     <section className="relative overflow-hidden">
       <div aria-hidden className="ambient-mesh" />
 
-      <div className="mx-auto grid max-w-6xl gap-12 px-6 py-24 md:grid-cols-[1.4fr_1fr] md:items-center md:py-32">
+      <div className="mx-auto grid max-w-6xl gap-6 px-6 py-24 md:grid-cols-[1.5fr_1fr] md:items-center md:gap-8 md:py-32">
         <div>
           <Reveal>
             <span className="glass mb-6 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium text-[color:var(--muted)]">
@@ -34,7 +34,7 @@ export function Hero({ profile, username }: Props) {
           </Reveal>
 
           <Reveal delay={0.08}>
-            <h1 className="text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl">
+            <h1 className="text-6xl font-bold leading-[1.0] tracking-tight md:text-8xl">
               {name.split(" ")[0]}
               <br />
               <span className="text-gradient-brand">{name.split(" ").slice(1).join(" ")}</span>
@@ -98,7 +98,7 @@ export function Hero({ profile, username }: Props) {
             <div className="relative">
               <div className="absolute -inset-4 rounded-[2.5rem] bg-gradient-to-br from-brand-500/30 via-transparent to-brand-500/10 blur-2xl" />
               <div className="glass-panel relative rounded-[2rem] p-2.5">
-                <div className="relative size-60 overflow-hidden rounded-[1.6rem] md:size-72">
+                <div className="relative size-64 overflow-hidden rounded-[1.6rem] md:size-80">
                   <Image
                     src={avatar}
                     alt={name}

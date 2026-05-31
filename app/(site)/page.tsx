@@ -6,9 +6,9 @@ import { redirect } from "next/navigation";
 import { Reveal, Stagger, StaggerItem } from "@/components/ui/reveal";
 
 export const metadata: Metadata = {
-  title: "Folonest — Your portfolio finds its home",
+  title: "Portfolio",
   description:
-    "Folonest is where your portfolio finds its home. Beautiful, SEO-friendly portfolios with a built-in admin panel. No code, no redeploys. Sign up, fill it in, share your link.",
+    "A beautiful, SEO-friendly portfolio with a built-in admin panel. No code, no redeploys.",
 };
 
 export default async function MarketingLanding() {
@@ -76,9 +76,9 @@ export default async function MarketingLanding() {
             </Reveal>
             <Reveal delay={0.08}>
               <h1 className="mt-6 text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl">
-                Your portfolio
+                Your portfolio,
                 <br />
-                <span className="text-brand-500">finds its home.</span>
+                <span className="text-brand-500">beautifully done.</span>
               </h1>
             </Reveal>
             <Reveal delay={0.16}>
@@ -248,7 +248,7 @@ const FEATURES = [
   {
     icon: Rocket,
     title: "Ship in minutes",
-    body: "Sign up, pick your username, fill in your story. Your portfolio is live at folonest.com/u/your-name.",
+    body: "Sign up, pick your username, fill in your story. Your portfolio is live at your own clean URL.",
   },
 ];
 
@@ -263,6 +263,6 @@ const STEPS = [
   },
   {
     title: "Share your link",
-    body: "Your portfolio lives at folonest.com/u/your-name. Edit anytime, no redeploy.",
+    body: "Your portfolio lives at your own clean URL. Edit anytime, no redeploy.",
   },
 ];
